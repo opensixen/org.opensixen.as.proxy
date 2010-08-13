@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Proxy
+Bundle-SymbolicName: org.opensixen.as.proxy;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.opensixen.as.proxy.Activator
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0"
+Require-Bundle: org.opensixen.base;bundle-version="1.0.0",
+ org.eclipse.riena.communication.core;bundle-version="2.0.0",
+ org.eclipse.riena.communication.factory.hessian;bundle-version="2.0.0",
+ org.eclipse.riena.core;bundle-version="2.0.0"

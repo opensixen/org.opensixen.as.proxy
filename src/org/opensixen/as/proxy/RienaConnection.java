@@ -47,14 +47,17 @@ public class RienaConnection extends CConnection {
 		}
 		try {
 			unregister();
+			register(getURL());
+			ServiceReference ref = Activator.getContext().getServiceReference(IApplicationServer.class.getName());
+			IApplicationServer server  = (IApplicationServer) Activator.getContext().getService(ref);
+			if (server.testConnection())	{
+				m_server = server;
+			}
 		}
-		catch (Exception e)	{};
-		register(getURL());
-		ServiceReference ref = Activator.getContext().getServiceReference(IApplicationServer.class.getName());
-		IApplicationServer server  = (IApplicationServer) Activator.getContext().getService(ref);
-		if (server.testConnection())	{
-			m_server = server;
-		}
+		catch (Exception e)	{
+			e.printStackTrace();
+		};
+		
 		return m_server;
 	}
 

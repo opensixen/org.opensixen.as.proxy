@@ -2,6 +2,8 @@ package org.opensixen.as.proxy;
 
 import org.compiere.db.CConnection;
 import org.compiere.interfaces.Server;
+import org.compiere.interfaces.Status;
+import org.compiere.util.CLogger;
 import org.eclipse.riena.communication.core.IRemoteServiceRegistration;
 import org.eclipse.riena.communication.core.factory.Register;
 import org.opensixen.osgi.interfaces.IApplicationServer;
@@ -9,6 +11,8 @@ import org.osgi.framework.ServiceReference;
 
 public class RienaConnection extends CConnection {
 
+	private CLogger log = CLogger.getCLogger(getClass());
+	
 	private static IRemoteServiceRegistration serviceRegistration;
 
 	private IApplicationServer m_server;
@@ -17,6 +21,9 @@ public class RienaConnection extends CConnection {
 	
 	public RienaConnection() {
 		super(null);
+		// Setup default port
+		setAppsPort("8080");
+		
 		// TODO Auto-generated constructor stub
 	}
 
@@ -25,6 +32,8 @@ public class RienaConnection extends CConnection {
 	 */
 	@Override
 	public boolean isAppsServerOK(boolean tryContactAgain) {
+		try {
+		
 		// Si no existe, lo registramos
 		if (m_server == null)	{
 			getServer();
@@ -33,8 +42,13 @@ public class RienaConnection extends CConnection {
 		if (m_server == null)	{
 			return false;
 		}
-		
 		return m_server.testConnection();
+		}
+		catch (Exception e)	{
+			return false;
+		}
+		
+		
 	}
 
 	/* (non-Javadoc)
@@ -55,7 +69,7 @@ public class RienaConnection extends CConnection {
 			}
 		}
 		catch (Exception e)	{
-			e.printStackTrace();
+			log.severe("Can't connect to server.");
 		};
 		
 		return m_server;
@@ -67,6 +81,7 @@ public class RienaConnection extends CConnection {
 		buff.append("http://");
 		buff.append(getAppsHost());
 		buff.append(":").append(getAppsPort());
+		//buff.append("/osx");
 		buff.append("/hessian/");
 		buff.append(IApplicationServer.path);
 		return buff.toString();
@@ -78,7 +93,9 @@ public class RienaConnection extends CConnection {
 	}
 	
 	private static void unregister()	{
-		serviceRegistration.unregister();
+		if (serviceRegistration != null)	{
+			serviceRegistration.unregister();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -102,6 +119,13 @@ public class RienaConnection extends CConnection {
 		}
 
 		// TODO Obtener configuracion desde el servidor mediante status.
+		try {
+			updateInfoFromServer(m_server);
+		}
+		catch (Exception e)	{
+			return e;
+		}
+		
 		
 		return null;
 	}

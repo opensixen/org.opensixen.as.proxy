@@ -150,7 +150,7 @@ public class RienaConnection extends CConnection {
 		buff.append("http://");
 		buff.append(getAppsHost());
 		buff.append(":").append(getAppsPort());
-		//buff.append("/osx");
+		buff.append("/osx");
 		buff.append("/hessian/");
 		buff.append(IApplicationServer.path);
 		return buff.toString();
